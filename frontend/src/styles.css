@@ -1,0 +1,88 @@
+body {
+  font-family: 'Press Start 2P', cursive;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #1d1f20, #323537);
+  color: #fff;
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.machine {
+  background: #2d2f31;
+  border: 5px solid #444;
+  border-radius: 15px;
+  padding: 20px;
+  display: inline-block;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+.reels {
+  font-size: 80px;
+  margin: 20px;
+  letter-spacing: 20px;
+}
+
+button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1rem;
+  padding: 10px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button.spin { background: #4caf50; color: #fff; }
+button.spin:hover { background: #45a049; }
+button.attack { background: #f44336; color: #fff; }
+button.attack:hover { background: #e53935; }
+
+.message {
+  margin-top: 15px;
+  font-size: 1.2rem;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
+
+.console {
+  background: #111;
+  color: #0f0;
+  font-size: 0.8rem;
+  font-family: monospace;
+  text-align: left;
+  padding: 10px;
+  margin-top: 20px;
+  max-height: 200px;
+  overflow-y: scroll;
+  border: 2px solid #333;
+}
+
+.toggle {
+  margin-bottom: 20px;
+}
+
+.toggle label {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.toggle input {
+  margin-right: 10px;
+  transform: scale(1.5);
+  cursor: pointer;
+}

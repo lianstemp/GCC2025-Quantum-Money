@@ -1,0 +1,14 @@
+{
+  "name": "quantum-slot-frontend",
+  "version": "1.0.0",
+  "description": "Quantum Slot Machine Frontend",
+  "scripts": {
+    "build": "mkdir -p dist && cp src/index.html dist/ && cp src/styles.css dist/ && cp src/main.js dist/",
+    "dev": "http-server src -p 3000 --cors -c-1",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

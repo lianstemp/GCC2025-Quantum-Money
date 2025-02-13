@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Quantum Slot Machine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Add error handling for resource loading
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
+      return false;
+    };
+  </script>
+</head>
+<body>
+  <h1>Quantum Slot Machine</h1>
+  <div class="machine">
+    <div class="toggle">
+      <label>
+        <input type="checkbox" id="entangledCheckbox" checked>
+        Enable Entanglement
+      </label>
+    </div>
+    <div class="reels" id="reels">- - -</div>
+    <div>
+      <button class="spin" onclick="spin()">Spin</button>
+      <button class="attack" onclick="attack()">Attack</button>
+    </div>
+    <div class="message" id="message"></div>
+  </div>
+  <div class="console" id="console">
+    Loading console logs...
+  </div>
+  <script src="main.js"></script>
+  <script>
+    console.log('Page loaded successfully');
+  </script>
+</body>
+</html>

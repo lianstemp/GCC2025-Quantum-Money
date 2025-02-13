@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Package Lambda Function
+        run: |
+          cd backend
+          zip -r ../backend.zip .
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: "1.0.11"
+      
+      - name: Terraform Init
+        run: terraform init
+        working-directory: infra
+      
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: infra
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+        working-directory: infra
