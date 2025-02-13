@@ -164,7 +164,3 @@ async def api_attack(entangled: bool = Query(True)):
 async def get_console_logs():
     """Returns the current console log messages."""
     return {"logs": console_logs}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

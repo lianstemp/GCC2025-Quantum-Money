@@ -73,17 +73,17 @@ resource "aws_instance" "backend" {
     #!/bin/bash
     # Update system and install dependencies (using Amazon Linux commands)
     yum update -y
-    yum install -y python3 git
+    yum install -y python3.10 git tmux
 
     cd /home/ec2-user
     git clone https://github.com/lianstemp/GCC2025-Quantum-Money.git
     cd GCC2025-Quantum-Money/backend
 
     # Install Python dependencies from requirements.txt
-    python3 -m pip install -r requirements.txt
+    python3.10 -m pip install -r requirements.txt
 
-    # Start the FastAPI app (running in the background)
-    nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
+    # Start the FastAPI app in a new tmux session (running in the background)
+    tmux new-session -d -s fastapi_session 'uvicorn main:app --host 0.0.0.0 --port 8000'
   EOF
 
 }
