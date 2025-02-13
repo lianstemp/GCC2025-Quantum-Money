@@ -86,3 +86,25 @@ button.attack:hover { background: #e53935; }
   transform: scale(1.5);
   cursor: pointer;
 }
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  .machine {
+    width: 90%;
+  }
+  .reels {
+    font-size: 60px;
+    letter-spacing: 10px;
+  }
+  button {
+    font-size: 0.8rem;
+  }
+  .toggle label {
+    font-size: 0.8rem;
+  }
+  .console {
+    font-size: 0.7rem;
+  }
+}
