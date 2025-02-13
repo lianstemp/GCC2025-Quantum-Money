@@ -77,12 +77,12 @@ resource "aws_instance" "backend" {
   EOF
 }
 
-resource "random_id" "bucket_id" {
-  byte_length = 4
-}
+# resource "random_id" "bucket_id" {
+#   byte_length = 4
+# }
 
 resource "aws_s3_bucket" "frontend" {
-  bucket = "quantum-slot-machine-frontend-${random_id.bucket_id.hex}"
+  bucket = "quantumoney.datzen.cloud"
 }
 
 resource "aws_s3_bucket_ownership_controls" "frontend" {
