@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Slots | Quantum Casino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: url('https://a.travel-assets.com/findyours-php/viewfinder/images/res70/20000/20181-Bellagio-Casino.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+    nav {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      text-align: center;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline;
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+    }
+    .container {
+      text-align: center;
+      padding: 50px;
+    }
+    .machine {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border: 3px solid #333;
+      border-radius: 15px;
+      margin: 20px auto;
+      width: 80%;
+      max-width: 600px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+    .toggle {
+      margin: 15px 0;
+    }
+    .toggle label {
+      font-size: 1rem;
+    }
+    .toggle input {
+      margin-right: 10px;
+      transform: scale(1.3);
+      vertical-align: middle;
+    }
+    .reels {
+      font-size: 80px;
+      letter-spacing: 15px;
+      margin: 20px 0;
+    }
+    button {
+      font-family: 'Press Start 2P', cursive;
+      font-size: 1rem;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button.spin {
+      background: #4caf50;
+      color: #fff;
+    }
+    button.spin:hover {
+      background: #45a049;
+    }
+    button.attack {
+      background: #f44336;
+      color: #fff;
+    }
+    button.attack:hover {
+      background: #e53935;
+    }
+    .message {
+      font-size: 1.2rem;
+      margin: 10px;
+    }
+    .console {
+      background: #111;
+      color: #0f0;
+      font-size: 0.8rem;
+      font-family: monospace;
+      text-align: left;
+      padding: 10px;
+      margin: 20px auto;
+      width: 80%;
+      max-width: 600px;
+      height: 150px;
+      overflow-y: scroll;
+      border: 2px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="slot.html">Slot Machine</a></li>
+      <li><a href="card.html">Card Game</a></li>
+    </ul>
+  </nav>
+  <div class="container">
+    <h1>Slot Machine</h1>
+    <div class="machine">
+      <div class="toggle">
+        <label><input type="checkbox" id="quantumCheckbox" checked> Use Quantum Randomness</label>
+      </div>
+      <div class="toggle">
+        <label><input type="checkbox" id="eavesdropCheckbox"> Simulate Eavesdropping</label>
+      </div>
+      <div class="reels" id="reels">- - -</div>
+      <button class="spin" onclick="spin()">Spin</button>
+      <button class="attack" onclick="attack()">Attack</button>
+      <div class="message" id="message"></div>
+    </div>
+    <div class="console" id="console">Loading console logs...</div>
+  </div>
+  <script>
+    function fetchWithCORS(url) {
+      return fetch(url, {
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+    }
+    function getQuantumSetting() {
+      return document.getElementById('quantumCheckbox').checked;
+    }
+    function getEavesdropSetting() {
+      return document.getElementById('eavesdropCheckbox').checked;
+    }
+    async function spin() {
+      document.getElementById('message').innerText = "";
+      try {
+        const useQuantum = getQuantumSetting();
+        const simulateEavesdrop = getEavesdropSetting();
+        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/spin?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
+        const data = await response.json();
+        if(data.error) {
+          document.getElementById('message').innerText = data.error;
+          document.getElementById('reels').innerText = "- - -";
+        } else {
+          document.getElementById('reels').innerText = data.result.join(' ');
+          if(data.message) document.getElementById('message').innerText = data.message;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    async function attack() {
+      document.getElementById('message').innerText = "";
+      try {
+        const useQuantum = getQuantumSetting();
+        const simulateEavesdrop = getEavesdropSetting();
+        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/attack?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
+        const data = await response.json();
+        if(data.error) {
+          document.getElementById('message').innerText = data.error;
+          document.getElementById('reels').innerText = "- - -";
+        } else {
+          document.getElementById('reels').innerText = data.result.join(' ');
+          document.getElementById('message').innerText = data.message;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    async function updateConsole() {
+      try {
+        const response = await fetchWithCORS("http://54.250.157.48:8000/api/console");
+        const data = await response.json();
+        document.getElementById('console').innerText = data.logs.join('\n');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setInterval(updateConsole, 2000);
+    updateConsole();
+  </script>
+</body>
+</html>

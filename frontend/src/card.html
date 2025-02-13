@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Card Guessing | Quantum Casino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Press Start 2P', cursive;
+      background: url('https://a.travel-assets.com/findyours-php/viewfinder/images/res70/20000/20181-Bellagio-Casino.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+    nav {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px 0;
+      text-align: center;
+    }
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline;
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+    }
+    /* Main container */
+    .container {
+      max-width: 800px;
+      margin: 80px auto 40px;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px #000;
+    }
+    /* Card game box */
+    .game {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    }
+    /* Toggle styling */
+    .toggle {
+      margin: 15px 0;
+      text-align: left;
+    }
+    .toggle label {
+      font-size: 1rem;
+    }
+    .toggle input {
+      margin-right: 8px;
+      transform: scale(1.2);
+      vertical-align: middle;
+    }
+    /* Input styling */
+    input[type="number"] {
+      padding: 8px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+      width: 120px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #4caf50;
+      color: #fff;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #43a047;
+    }
+    button.deal {
+      background: #2196F3;
+    }
+    button.deal:hover {
+      background: #1976D2;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      text-shadow: 1px 1px #000;
+    }
+    .console {
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 0.8rem;
+      text-align: left;
+      padding: 10px;
+      margin: 20px auto 0;
+      max-width: 600px;
+      height: 150px;
+      overflow-y: auto;
+      border: 2px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar with relative links -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="slot.html">Slot Machine</a></li>
+      <li><a href="card.html">Card Game</a></li>
+    </ul>
+  </nav>
+  <!-- Main Container -->
+  <div class="container">
+    <h1>Card Game</h1>
+    <div class="game">
+      <div class="toggle">
+        <label>
+          <input type="checkbox" id="quantumCheckbox" checked>
+          Use Quantum Randomness
+        </label>
+      </div>
+      <div class="toggle">
+        <label>
+          <input type="checkbox" id="eavesdropCheckbox">
+          Simulate Eavesdropping
+        </label>
+      </div>
+      <button class="deal" onclick="dealCards()">Deal Cards</button>
+      <div id="dealResult" style="margin-top: 10px;"></div>
+      <div style="margin-top: 20px;">
+        <input type="number" id="player1" placeholder="Player 1 Guess">
+        <input type="number" id="player2" placeholder="Player 2 Guess">
+        <button class="guess" onclick="submitGuess()">Submit Guess</button>
+      </div>
+      <div class="result" id="result"></div>
+    </div>
+    <div class="console" id="console">Loading console logs...</div>
+  </div>
+  <script>
+    function fetchWithCORS(url) {
+      return fetch(url, {
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+    }
+
+    function getQuantumSetting() {
+      return document.getElementById('quantumCheckbox').checked;
+    }
+    function getEavesdropSetting() {
+      return document.getElementById('eavesdropCheckbox').checked;
+    }
+    async function dealCards() {
+      document.getElementById('dealResult').innerText = "";
+      document.getElementById('result').innerText = "";
+      try {
+        const useQuantum = getQuantumSetting();
+        const simulateEavesdrop = getEavesdropSetting();
+        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/card/deal?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
+        const data = await response.json();
+        if(data.error){
+          document.getElementById('dealResult').innerText = data.error;
+        } else {
+          let message = "";
+          if(useQuantum) {
+            message = `Card 1: ?, Card 2: ?. ${data.message}`;
+          } else {
+            message = `Card 1: ${data.card1}, Card 2: ${data.card2}, Sum: ${data.sum}. ${data.message}`;
+          }
+          document.getElementById('dealResult').innerText = message;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    async function submitGuess() {
+      document.getElementById('result').innerText = "";
+      try {
+        const p1 = document.getElementById('player1').value;
+        const p2 = document.getElementById('player2').value;
+        if (!p1 || !p2) {
+          document.getElementById('result').innerText = "Please enter both guesses.";
+          return;
+        }
+        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/card/guess?player1=${p1}&player2=${p2}`);
+        const data = await response.json();
+        let msg = `Target Sum: ${data.target}. Player 1 guessed: ${data.player1_guess}, Player 2 guessed: ${data.player2_guess}. Winner: ${data.winner}`;
+        document.getElementById('result').innerText = msg;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    async function updateConsole() {
+      try {
+        const response = await fetchWithCORS("http://54.250.157.48:8000/api/console");
+        const data = await response.json();
+        document.getElementById('console').innerText = data.logs.join('\n');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setInterval(updateConsole, 2000);
+    updateConsole();
+  </script>
+</body>
+</html>

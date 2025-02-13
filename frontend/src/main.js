@@ -1,5 +1,3 @@
-const API_URL = 'http://54.250.157.48:8000';
-
 async function fetchWithCORS(url) {
   return fetch(url, {
     mode: 'cors',
@@ -9,27 +7,27 @@ async function fetchWithCORS(url) {
   });
 }
 
-function getEntanglement() {
-  return document.getElementById('entangledCheckbox').checked;
+function getQuantumSetting() {
+  return document.getElementById('quantumCheckbox').checked;
 }
 
 async function spin() {
   clearMessage();
-  const entangled = getEntanglement();
+  const quantum = getQuantumSetting();
   try {
-    const response = await fetchWithCORS(`${API_URL}/api/spin?entangled=${entangled}`);
+    const response = await fetchWithCORS(`http://54.250.157.48:8000/api/spin?use_quantum=${quantum}`);
     const data = await response.json();
     document.getElementById('reels').innerText = data.result.join(' ');
   } catch (error) {
-    console.error('Error during spin:', error);
+    console.error(error);
   }
 }
 
 async function attack() {
   clearMessage();
-  const entangled = getEntanglement();
+  const quantum = getQuantumSetting();
   try {
-    const response = await fetchWithCORS(`${API_URL}/api/attack?entangled=${entangled}`);
+    const response = await fetchWithCORS(`http://54.250.157.48:8000/api/attack?use_quantum=${quantum}`);
     const data = await response.json();
     if (data.status === "success") {
       document.getElementById('reels').innerText = data.result.join(' ');
@@ -39,7 +37,7 @@ async function attack() {
     }
     document.getElementById('message').innerText = data.message;
   } catch (error) {
-    console.error('Error during attack:', error);
+    console.error(error);
   }
 }
 
@@ -58,11 +56,11 @@ function removeBlink() {
 
 async function updateConsole() {
   try {
-    const response = await fetchWithCORS(`${API_URL}/api/console`);
+    const response = await fetchWithCORS("http://54.250.157.48:8000/api/console");
     const data = await response.json();
     document.getElementById('console').innerText = data.logs.join('\n');
   } catch (error) {
-    console.error('Error fetching console logs:', error);
+    console.error(error);
   }
 }
 
