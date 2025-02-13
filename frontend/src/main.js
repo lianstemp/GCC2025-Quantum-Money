@@ -15,7 +15,7 @@ async function spin() {
   clearMessage();
   const quantum = getQuantumSetting();
   try {
-    const response = await fetchWithCORS(`http://54.250.157.48:8000/api/spin?use_quantum=${quantum}`);
+    const response = await fetchWithCORS(`https://54.250.157.48:8000/api/spin?use_quantum=${quantum}`);
     const data = await response.json();
     document.getElementById('reels').innerText = data.result.join(' ');
   } catch (error) {
@@ -27,7 +27,7 @@ async function attack() {
   clearMessage();
   const quantum = getQuantumSetting();
   try {
-    const response = await fetchWithCORS(`http://54.250.157.48:8000/api/attack?use_quantum=${quantum}`);
+    const response = await fetchWithCORS(`https://54.250.157.48:8000/api/attack?use_quantum=${quantum}`);
     const data = await response.json();
     if (data.status === "success") {
       document.getElementById('reels').innerText = data.result.join(' ');
@@ -56,7 +56,7 @@ function removeBlink() {
 
 async function updateConsole() {
   try {
-    const response = await fetchWithCORS("http://54.250.157.48:8000/api/console");
+    const response = await fetchWithCORS("https://54.250.157.48:8000/api/console");
     const data = await response.json();
     document.getElementById('console').innerText = data.logs.join('\n');
   } catch (error) {

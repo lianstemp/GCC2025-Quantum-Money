@@ -196,7 +196,7 @@
       try {
         const useQuantum = getQuantumSetting();
         const simulateEavesdrop = getEavesdropSetting();
-        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/card/deal?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
+        const response = await fetchWithCORS(`https://54.250.157.48:8000/api/card/deal?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
         const data = await response.json();
         if(data.error){
           document.getElementById('dealResult').innerText = data.error;
@@ -222,7 +222,7 @@
           document.getElementById('result').innerText = "Please enter both guesses.";
           return;
         }
-        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/card/guess?player1=${p1}&player2=${p2}`);
+        const response = await fetchWithCORS(`https://54.250.157.48:8000/api/card/guess?player1=${p1}&player2=${p2}`);
         const data = await response.json();
         let msg = `Target Sum: ${data.target}. Player 1 guessed: ${data.player1_guess}, Player 2 guessed: ${data.player2_guess}. Winner: ${data.winner}`;
         document.getElementById('result').innerText = msg;
@@ -232,7 +232,7 @@
     }
     async function updateConsole() {
       try {
-        const response = await fetchWithCORS("http://54.250.157.48:8000/api/console");
+        const response = await fetchWithCORS("https://54.250.157.48:8000/api/console");
         const data = await response.json();
         document.getElementById('console').innerText = data.logs.join('\n');
       } catch (error) {

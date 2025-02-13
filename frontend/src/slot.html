@@ -168,7 +168,7 @@
       try {
         const useQuantum = getQuantumSetting();
         const simulateEavesdrop = getEavesdropSetting();
-        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/spin?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
+        const response = await fetchWithCORS(`https://54.250.157.48:8000/api/spin?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
         const data = await response.json();
         if(data.error) {
           document.getElementById('message').innerText = data.error;
@@ -186,7 +186,7 @@
       try {
         const useQuantum = getQuantumSetting();
         const simulateEavesdrop = getEavesdropSetting();
-        const response = await fetchWithCORS(`http://54.250.157.48:8000/api/attack?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
+        const response = await fetchWithCORS(`https://54.250.157.48:8000/api/attack?use_quantum=${useQuantum}&simulate_eavesdrop=${simulateEavesdrop}`);
         const data = await response.json();
         if(data.error) {
           document.getElementById('message').innerText = data.error;
@@ -201,7 +201,7 @@
     }
     async function updateConsole() {
       try {
-        const response = await fetchWithCORS("http://54.250.157.48:8000/api/console");
+        const response = await fetchWithCORS("https://54.250.157.48:8000/api/console");
         const data = await response.json();
         document.getElementById('console').innerText = data.logs.join('\n');
       } catch (error) {
