@@ -1,4 +1,4 @@
-const API_URL = 'https://mhextuihsa.execute-api.ap-northeast-1.amazonaws.com';
+const API_URL = 'http://54.250.157.48:8000';
 
 async function fetchWithCORS(url) {
   return fetch(url, {

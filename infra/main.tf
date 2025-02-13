@@ -24,15 +24,6 @@ resource "aws_default_subnet" "first" {
   availability_zone = "ap-northeast-1a"
 }
 
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-ebs"]
-  }
-}
-
 resource "aws_security_group" "backend" {
   name   = "backend-sg"
   vpc_id = aws_default_vpc.default.id
@@ -63,29 +54,27 @@ resource "aws_security_group" "backend" {
 }
 
 resource "aws_instance" "backend" {
-  ami                         = data.aws_ami.amazon_linux.id
+  ami                         = "ami-0ddf631ad198e005e"
   instance_type               = "t2.micro"
+  key_name                    = "QuantumMoney-KEY"
   subnet_id                   = aws_default_subnet.first.id
   vpc_security_group_ids      = [aws_security_group.backend.id]
   associate_public_ip_address = true
 
   user_data = <<-EOF
     #!/bin/bash
-    # Update system and install dependencies (using Amazon Linux commands)
-    yum update -y
-    yum install -y python3.10 git tmux
+    apt-get update -y
+    apt-get upgrade -y
+    apt-get install -y python3.10 python3.10-venv python3.10-pip git tmux curl
 
-    cd /home/ec2-user
+    cd /home/admin
     git clone https://github.com/lianstemp/GCC2025-Quantum-Money.git
     cd GCC2025-Quantum-Money/backend
 
-    # Install Python dependencies from requirements.txt
     python3.10 -m pip install -r requirements.txt
 
-    # Start the FastAPI app in a new tmux session (running in the background)
     tmux new-session -d -s fastapi_session 'uvicorn main:app --host 0.0.0.0 --port 8000'
   EOF
-
 }
 
 resource "random_id" "bucket_id" {
@@ -94,6 +83,19 @@ resource "random_id" "bucket_id" {
 
 resource "aws_s3_bucket" "frontend" {
   bucket = "quantum-slot-machine-frontend-${random_id.bucket_id.hex}"
+}
+
+resource "aws_s3_bucket_ownership_controls" "frontend" {
+  bucket = aws_s3_bucket.frontend.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "frontend" {
+  depends_on = [aws_s3_bucket_ownership_controls.frontend]
+  bucket = aws_s3_bucket.frontend.id
+  acl    = "public-read"
 }
 
 resource "aws_s3_bucket_website_configuration" "frontend" {
@@ -120,13 +122,18 @@ resource "aws_s3_bucket_public_access_block" "frontend" {
 resource "aws_s3_bucket_policy" "frontend_policy" {
   bucket = aws_s3_bucket.frontend.id
   policy = jsonencode({
-    Version   = "2012-10-17",
+    Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow",
-        Principal = "*",
-        Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.frontend.arn}/*"
+        Sid       = "PublicReadGetObject"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = [
+          "s3:GetObject"
+        ]
+        Resource = [
+          "${aws_s3_bucket.frontend.arn}/*"
+        ]
       }
     ]
   })
